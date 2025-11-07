@@ -12,6 +12,10 @@ df = pd.read_csv("rainfall_data.csv")
 label_encoder = LabelEncoder()
 df['Flood_Risk_Label'] = label_encoder.fit_transform(df['Flood_Risk'])
 
+# Clean up extra spaces or weird entries
+df['Flood_Risk'] = df['Flood_Risk'].str.strip()
+df = df[df['Flood_Risk'].isin(['Low', 'Medium', 'High'])]
+
 # Split data
 X = df[['Rainfall_mm']]
 y = df['Flood_Risk_Label']
@@ -29,3 +33,4 @@ print(classification_report(y_test, y_pred, target_names=label_encoder.classes_)
 # Save model
 joblib.dump(model, 'flood_risk_model.pkl')
 joblib.dump(label_encoder, 'label_encoder.pkl')
+print("✅ Model saved successfully!")
